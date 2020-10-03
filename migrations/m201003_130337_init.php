@@ -37,7 +37,12 @@ class m201003_130337_init extends Migration
         ], $tableOptions);
         $this->addCommentOnTable('{{%news_rubrics}}', 'Новостные рубрики');
 
-        
+        $this->createIndex("nr_news", "{{%news_rubrics}}", "id_new");
+        $this->createIndex("nr_rubrics", "{{%news_rubrics}}", "id_rubric");
+        $this->createIndex("r_parent_rubrics", "{{%rubrics}}", "id_parent");
+        $this->addForeignKey("nr_news", "{{%news_rubrics}}", "id_new", "{{%news}}", "id", "CASCADE", "CASCADE");
+        $this->addForeignKey("nr_rubrics", "{{%news_rubrics}}", "id_rubric", "{{%rubrics}}", "id", "CASCADE", "CASCADE");
+        $this->addForeignKey("r_parent_rubrics", "{{%rubrics}}", "id_parent", "{{%rubrics}}", "id", "CASCADE", "CASCADE");
 
         return true;
     }
@@ -51,7 +56,7 @@ class m201003_130337_init extends Migration
         $this->dropTable('{{%news}}');
         $this->dropTable('{{%rubrics}}');
 
-        return false;
+        return true;
     }
 
     /*
