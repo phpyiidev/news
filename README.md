@@ -1,4 +1,14 @@
 <p align="center">
+	<h1 align="center">Установка</h1>
+</p>
+<ul>
+	<li>git init</li>
+	<li>git clone git@github.com:phpyiidev/news.git</li>
+	<li>composer update --lock</li>
+	<li>Настроить подключение к БД в файле config/db.php</li>
+	<li>php yii migrate</li>
+</ul>
+<p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
     </a>

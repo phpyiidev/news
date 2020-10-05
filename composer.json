@@ -22,7 +22,8 @@
         "ianikanov/yii2-wce": "dev-master",
         "warrence/yii2-kartikgii": "dev-master",
         "schmunk42/yii2-giiant": "@stable",
-        "voskobovich/yii2-many-many-behavior": "~3.0"
+        "voskobovich/yii2-many-many-behavior": "~3.0",
+        "la-haute-societe/yii2-save-relations-behavior": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

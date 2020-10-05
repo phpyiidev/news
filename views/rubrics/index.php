@@ -30,8 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
 
         <div class="pull-right">
-
-
             <?=
             \yii\bootstrap\ButtonDropdown::widget(
                 [
@@ -56,7 +54,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]
                 ]
             );
-            ?>        </div>
+            ?>
+        </div>
     </div>
 
     <hr/>

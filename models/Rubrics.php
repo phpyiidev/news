@@ -31,4 +31,51 @@ class Rubrics extends BaseRubrics
             ]
         );
     }
+
+    public static function listAll($keyField = 'id', $valueField = 'name', $asArray = true)
+    {
+        $query = static::find();
+        if ($asArray) {
+            $query->select([$keyField, $valueField])->asArray();
+        }
+
+        return ArrayHelper::map($query->all(), $keyField, $valueField);
+    }
+
+    public static function listAllFormated($type = "list")
+    {
+        $rubrics = static::findAll(['id_parent' => null]);
+        $allRubrics = [];
+        foreach ($rubrics as $model) {
+            $subRubrics = static::getSubRubrics($model->id, $subRubrics);
+            if ($type == "list") {
+                $allRubrics[$model->id] = $model->name;
+                if (!empty($subRubrics)) {
+                    array_merge($allRubrics,$subRubrics);
+                }
+            } elseif ($type == "array") {
+                array_push($allRubrics, $subRubrics);
+            }
+        }
+        return $allRubrics;
+    }
+
+    public static function getSubRubrics($id, &$out, $level = 0, $type = "list")
+    {
+        $subRubrics = static::findAll(['id_parent' => $id]);
+        $prefix = "";
+        $level++;
+        for ($c=0;$c<=$level;$c++) {
+            $prefix .= "-";
+        }
+        foreach ($subRubrics as $model) {
+            $out = static::getSubRubrics($model->id, $subRubrics);
+            if ($type == "list") {
+                $allSubRubrics[$model->id] = $prefix.$model->name;
+            } elseif ($type == "array") {
+                array_push($allSubRubrics, $subRubrics);
+            }
+        }
+        return $allSubRubrics;
+    }
 }
