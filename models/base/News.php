@@ -4,6 +4,7 @@
 
 namespace app\models\base;
 
+use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -47,12 +48,12 @@ abstract class News extends \yii\db\ActiveRecord
             [
                 'class' => TimestampBehavior::className(),
             ],
-            /*[
-                'class' => \voskobovich\behaviors\ManyToManyBehavior::className(),
+            'saveRelations' => [
+                'class'     => SaveRelationsBehavior::className(),
                 'relations' => [
-                    'rubrics_ids' => 'rubrics',
+                    'NewsRubrics',
                 ],
-            ],*/
+            ],
         ];
     }
 
@@ -63,9 +64,8 @@ abstract class News extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['text'], 'integer'],
+            [['text'], 'string'],
             [['name'], 'string', 'max' => 42],
-            [['rubrics_ids'], 'each', 'rule' => ['integer']],
         ];
     }
 
@@ -85,19 +85,11 @@ abstract class News extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getRubrics()
     {
-        return $this->hasMany(Rubrics::className(), ['id' => 'id_rubric'])
-            ->viaTable('{{%news_rubrics}}', ['id_new' => 'id']);
-    }
-
-    public static function listAll($keyField = 'id', $valueField = 'name', $asArray = true)
-    {
-        $query = static::find();
-        if ($asArray) {
-            $query->select([$keyField, $valueField])->asArray();
-        }
-
-        return ArrayHelper::map($query->all(), $keyField, $valueField);
+        return $this->hasMany(\app\models\Rubrics::className(), ['id' => 'id_rubric'])->viaTable('{{%news_rubrics}}', ['id_new' => 'id']);
     }
 }
