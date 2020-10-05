@@ -7,9 +7,41 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'language' => 'ru_Ru',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+    ],
+    'controllerMap' => [
+        'wce-embed' => '\ianikanov\wce\Controller',
+    ],
+    'modules' => [
+        'gridview' => [
+            'class' => 'kartik\grid\Module',
+        ],
+        'datecontrol' =>  [
+            'class' => 'kartik\datecontrol\Module',
+
+            // format settings for displaying each date attribute
+            'displaySettings' => [
+                'date' => 'd-m-Y',
+                'time' => 'H:i:s A',
+                'datetime' => 'd-m-Y H:i:s A',
+            ],
+
+            // format settings for saving each date attribute
+            'saveSettings' => [
+                'date' => 'Y-m-d',
+                'time' => 'H:i:s',
+                'datetime' => 'Y-m-d H:i:s',
+            ],
+
+
+
+            // automatically use kartik\widgets for each of the above formats
+            'autoWidget' => true,
+
+        ]
     ],
     'components' => [
         'request' => [
@@ -43,14 +75,28 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
+        'i18n' => [
+            'translations' => [
+                'app' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                ],
+                'giiant' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                ],
+                'cruds' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                ],
+            ]
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
     ],
     'params' => $params,
 ];
@@ -69,6 +115,15 @@ if (YII_ENV_DEV) {
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
         //'allowedIPs' => ['127.0.0.1', '::1'],
+        'generators' => [ //here
+            'widgetCrud' => [
+                'class' => '\ianikanov\wce\templates\crud\Generator',
+                'templates' => [
+                    'WCE' => '@vendor/ianikanov/yii2-wce/templates/crud/default', // template name
+                ],
+            ],
+            'kartikgii-crud' => ['class' => 'warrence\kartikgii\crud\Generator'],
+        ],
     ];
 }
 
