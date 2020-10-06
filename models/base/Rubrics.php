@@ -49,7 +49,7 @@ abstract class Rubrics extends \yii\db\ActiveRecord
             'saveRelations' => [
                 'class'     => SaveRelationsBehavior::className(),
                 'relations' => [
-                    'NewsRubrics',
+                    'news',
                 ],
             ],
         ];
@@ -73,7 +73,7 @@ abstract class Rubrics extends \yii\db\ActiveRecord
             [['name'], 'string', 'max' => 42],
             [['name'], 'unique'],
             [['id_parent'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Rubrics::className(), 'targetAttribute' => ['id_parent' => 'id']],
-            //[['news_ids'], 'each', 'rule' => ['integer']],
+            [['news'], 'safe'],
         ];
     }
 

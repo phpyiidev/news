@@ -1,5 +1,6 @@
 <?php
 
+use kartik\widgets\Select2;
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use yii\helpers\StringHelper;
@@ -28,7 +29,15 @@ $listRubrics = [];
         <p>
             <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
             <?= $form->field($model, 'text')->textarea(['rows' => 5]) ?>
-            <?= $form->field($model, 'rubrics')->dropDownList(\app\models\Rubrics::listAllFormated($listRubrics), []) ?>
+            <?= $form->field($model, 'rubrics')->widget(Select2::classname(), [
+                'data' => \app\models\Rubrics::listAllFormated($listRubrics),
+                'options' => ['placeholder' => 'Выберите рубрики ...', 'multiple' => true],
+                'pluginOptions' => [
+                    'tags' => true,
+                    'tokenSeparators' => [',', ' '],
+                    'maximumInputLength' => 10
+                ],
+            ])->label('Рубрики'); ?>
         </p>
 
         <hr/>

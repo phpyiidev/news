@@ -77,14 +77,15 @@ class NewsController extends BaseController
     public function actionCreate()
     {
         $model = new News;
-        $model->load($_GET);
+        $model->load(\Yii::$app->request->get());
         $relAttributes = $model->attributes;
         
         try {
-            if ($model->load($_POST) && $model->save()) {
+            if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+                //print_r($model);exit;
                 if($relAttributes){
                     return $this->goBack();
-                }      
+                }
                 return $this->redirect(['view', 'id' => $model->id]);
             } elseif (!\Yii::$app->request->isPost) {
                 $model->load($_GET);

@@ -1,5 +1,7 @@
 <?php
 
+use app\models\Rubrics;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\GridView;
@@ -83,6 +85,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'name',
                 'text',
+                [
+                    'attribute' => 'rubrics',
+                    'content' => function($model) {
+                        $rubrics = Rubrics::findAll(['IN', 'id', $model->rubrics]);
+                        $arrNameRubrics = ArrayHelper::getValue($rubrics,'name');
+                        return empty($arrNameRubrics) ? '' : implode(", ", $arrNameRubrics);
+                    }
+                ],
             ],
         ]); ?>
     </div>

@@ -21,7 +21,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $created_at
  * @property integer $updated_at
  *
- * @property \app\models\Rubrics[] $rubrics
+ * @property null|integer[]|\app\models\Rubrics[] $rubrics
  * @property string $aliasModel
  */
 abstract class News extends \yii\db\ActiveRecord
@@ -42,16 +42,12 @@ abstract class News extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            [
-                'class' => BlameableBehavior::className(),
-            ],
-            [
-                'class' => TimestampBehavior::className(),
-            ],
+            ['class' => BlameableBehavior::className(),],
+            ['class' => TimestampBehavior::className(),],
             'saveRelations' => [
                 'class'     => SaveRelationsBehavior::className(),
                 'relations' => [
-                    'NewsRubrics',
+                    'rubrics',
                 ],
             ],
         ];
@@ -66,6 +62,7 @@ abstract class News extends \yii\db\ActiveRecord
             [['name'], 'required'],
             [['text'], 'string'],
             [['name'], 'string', 'max' => 42],
+            [['rubrics'], 'safe'],
         ];
     }
 
@@ -78,6 +75,7 @@ abstract class News extends \yii\db\ActiveRecord
             'id' => 'Код',
             'name' => 'Заголовок',
             'text' => 'Текст',
+            'rubrics' => 'Рубрики',
             'created_by' => 'Создал',
             'updated_by' => 'Изменил',
             'created_at' => 'Создано',
