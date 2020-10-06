@@ -48,7 +48,7 @@ class Rubrics extends BaseRubrics
         foreach ($rubrics as $model) {
             $prefix = "";
             for ($c=0;$c<$level;$c++) {
-                $prefix .= "-";
+                $prefix .= "- ";
             }
             $level++;
             static::listAllFormated($out, $model->id, $level);

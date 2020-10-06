@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Rubrics;
+use kartik\widgets\Select2;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -83,15 +84,31 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'contentOptions' => ['nowrap' => 'nowrap']
                 ],
+                ['class' => 'yii\grid\SerialColumn'],
                 'name',
                 'text',
                 [
                     'attribute' => 'rubrics',
-                    'content' => function($model) {
-                        $rubrics = Rubrics::findAll(['IN', 'id', $model->rubrics]);
-                        $arrNameRubrics = ArrayHelper::getValue($rubrics,'name');
+                    'format' => 'row',
+                    'content' => function ($model) {
+                        $arrNameRubrics = ArrayHelper::getColumn($model->rubrics, 'name');
                         return empty($arrNameRubrics) ? '' : implode(", ", $arrNameRubrics);
-                    }
+                    },
+                    'filter' => Select2::widget([
+                        'id' => 'grid-rubrics-filter',
+                        'model' => $searchModel,
+                        'attribute' => 'rubrics',
+                        'data' => ArrayHelper::map(Rubrics::find()->all(), 'id', 'name'),
+                        'options' => [
+                            'placeholder' => 'Фильтр по рубрикам...',
+                            'multiple' => true
+                        ],
+                        'pluginOptions' => [
+                            'tags' => true,
+                            'tokenSeparators' => [',', ' '],
+                            'maximumInputLength' => 10
+                        ],
+                    ]),
                 ],
             ],
         ]); ?>

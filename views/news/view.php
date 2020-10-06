@@ -1,12 +1,8 @@
 <?php
 
 use dmstr\helpers\Html;
-use yii\helpers\Url;
-use yii\widgets\DetailView;
-use yii\widgets\Pjax;
-use kartik\editable\Editable;
-use kartik\grid\GridView;
-use kartik\grid\EditableColumn;
+use yii\helpers\ArrayHelper;
+use kartik\detail\DetailView;
 
 /**
  * @var yii\web\View $this
@@ -14,9 +10,9 @@ use kartik\grid\EditableColumn;
  */
 $copyParams = $model->attributes;
 
-$this->title = "Новость ". $model->name;
+$this->title = "Новость \"" . $model->name . "\"";
 $this->params['breadcrumbs'][] = ['label' => "Новости", 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => (string) $model->name, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => (string)$model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Просмотр';
 ?>
 <div class="giiant-crud news-view">
@@ -30,71 +26,74 @@ $this->params['breadcrumbs'][] = 'Просмотр';
         </span>
     <?php endif; ?>
 
-    <h1>
-        <?= Yii::t('cruds', 'News') ?>        <small>
-            <?= $model->name ?>        </small>
-    </h1>
-
-
     <div class="clearfix crud-navigation">
 
         <!-- menu buttons -->
         <div class='pull-left'>
             <?= Html::a(
-            '<span class="glyphicon glyphicon-pencil"></span> ' . 'Редактировать',
-            [ 'update', 'id' => $model->id],
-            ['class' => 'btn btn-info']) ?>
+                '<span class="glyphicon glyphicon-pencil"></span> ' . 'Редактировать',
+                ['update', 'id' => $model->id],
+                ['class' => 'btn btn-info']) ?>
 
             <?= Html::a(
-            '<span class="glyphicon glyphicon-copy"></span> ' . 'Копировать',
-            ['create', 'id' => $model->id, 'News'=>$copyParams],
-            ['class' => 'btn btn-success']) ?>
+                '<span class="glyphicon glyphicon-copy"></span> ' . 'Копировать',
+                ['create', 'id' => $model->id, 'News' => $copyParams],
+                ['class' => 'btn btn-success']) ?>
 
             <?= Html::a(
-            '<span class="glyphicon glyphicon-plus"></span> ' . 'Новая новость',
-            ['create'],
-            ['class' => 'btn btn-success']) ?>
+                '<span class="glyphicon glyphicon-plus"></span> ' . 'Новая новость',
+                ['create'],
+                ['class' => 'btn btn-success']) ?>
         </div>
 
         <div class="pull-right">
             <?= Html::a('<span class="glyphicon glyphicon-list"></span> '
-            . 'Full list', ['index'], ['class'=>'btn btn-default']) ?>
+                . 'Список новостей', ['index'], ['class' => 'btn btn-default']) ?>
         </div>
 
     </div>
 
-    <hr />
+    <hr/>
 
     <?php $this->beginBlock('app\models\News'); ?>
 
-    
+
     <?= DetailView::widget([
-    'model' => $model,
-    'attributes' => [
+        'model' => $model,
+        'attributes' => [
             'name',
-        'text',
-        'created_by',
-        'updated_by',
-        'created_at',
-        'updated_at',
-    ],
+            'text',
+            [
+                'attribute' => 'rubrics',
+                'label' => 'Рубрики',
+                'format' => 'html',
+                'value' => function (\kartik\form\ActiveForm $form, kartik\detail\DetailView $detailView) {
+                    $arrNameRubrics = ArrayHelper::getColumn($detailView->model->rubrics, 'name');
+                    return empty($arrNameRubrics) ? '' : implode(", ", $arrNameRubrics);
+                },
+            ],
+            'created_by',
+            'updated_by',
+            'created_at',
+            'updated_at',
+        ],
     ]); ?>
 
-    
+
     <hr/>
 
-    <?= Html::a('<span class="glyphicon glyphicon-trash"></span> ' . 'Delete', ['delete', 'id' => $model->id],
-    [
-    'class' => 'btn btn-danger',
-    'data-confirm' => '' . 'Are you sure to delete this item?' . '',
-    'data-method' => 'post',
-    ]); ?>
+    <?= Html::a('<span class="glyphicon glyphicon-trash"></span> ' . 'Удалить', ['delete', 'id' => $model->id],
+        [
+            'class' => 'btn btn-danger',
+            'data-confirm' => '' . 'Вы действительно хотите удалить эту новость?' . '',
+            'data-method' => 'post',
+        ]); ?>
     <?php $this->endBlock(); ?>
 
 
-        <div class="row">
+    <div class="row">
         <div class="col-md-4">
-            <?=$this->blocks['app\models\News']?>
+            <?= $this->blocks['app\models\News'] ?>
         </div>
-    </div>    
+    </div>
 </div>

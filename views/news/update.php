@@ -11,21 +11,15 @@ if(!isset($relAttributes)){
     $relAttributes = false;
 }
 
-$this->title = Yii::t('cruds', 'News') . $model->name . ', ' . 'Edit';
-$this->params['breadcrumbs'][] = ['label' => Yii::t('cruds', 'News'), 'url' => ['index']];
+$this->title = 'Новость "' . $model->name . '", ' . 'Редактирование';
+$this->params['breadcrumbs'][] = ['label' => "Новости", 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => (string)$model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Edit';
+$this->params['breadcrumbs'][] = 'Редактирование';
 ?>
 <div class="giiant-crud news-update">
 
-    <h1>
-        <?= Yii::t('cruds', 'News') ?>
-        <small>
-                        <?= $model->name ?>        </small>
-    </h1>
-
     <div class="crud-navigation">
-        <?= Html::a('<span class="glyphicon glyphicon-eye-open"></span> ' . 'View', ['view', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
+        <?= Html::a('<span class="glyphicon glyphicon-eye-open"></span> ' . 'Просмотр', ['view', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
     </div>
 
     <hr />
