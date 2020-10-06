@@ -42,25 +42,27 @@ class Rubrics extends BaseRubrics
         return ArrayHelper::map($query->all(), $keyField, $valueField);
     }
 
-    public static function listAllFormated($type = "list")
+    public static function listAllFormated(&$out, $id = null, &$level = 0, $type = "list")
     {
-        $rubrics = static::findAll(['id_parent' => null]);
-        $allRubrics = [];
+        $rubrics = static::findAll(['id_parent' => $id]);
         foreach ($rubrics as $model) {
-            $subRubrics = static::getSubRubrics($model->id, $subRubrics);
+            $prefix = "";
+            for ($c=0;$c<$level;$c++) {
+                $prefix .= "-";
+            }
+            $level++;
+            static::listAllFormated($out, $model->id, $level);
+            $level--;
             if ($type == "list") {
-                $allRubrics[$model->id] = $model->name;
-                if (!empty($subRubrics)) {
-                    array_merge($allRubrics,$subRubrics);
-                }
+                $out[$model->id] = $prefix.$model->name;
             } elseif ($type == "array") {
-                array_push($allRubrics, $subRubrics);
+                array_push($out,$model);
             }
         }
-        return $allRubrics;
+        return array_reverse($out,true);
     }
 
-    public static function getSubRubrics($id, &$out, $level = 0, $type = "list")
+    public static function getSubRubrics($id, &$out, &$level = 0, $type = "list")
     {
         $subRubrics = static::findAll(['id_parent' => $id]);
         $prefix = "";

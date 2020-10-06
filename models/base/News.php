@@ -66,7 +66,6 @@ abstract class News extends \yii\db\ActiveRecord
             [['name'], 'required'],
             [['text'], 'string'],
             [['name'], 'string', 'max' => 42],
-            [['rubrics_ids'], 'each', 'rule' => ['integer']],
         ];
     }
 

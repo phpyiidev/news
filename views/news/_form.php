@@ -11,6 +11,7 @@ use yii\helpers\StringHelper;
  * @var string $relAttributes relation fields names for disabling
  */
 
+$listRubrics = [];
 ?>
 
 <div class="news-form">
@@ -27,8 +28,7 @@ use yii\helpers\StringHelper;
         <p>
             <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
             <?= $form->field($model, 'text')->textarea(['rows' => 5]) ?>
-            <? print_r(\app\models\Rubrics::listAllFormated());exit; ?>
-            <?= $form->field($model, 'rubrics')->dropDownList(\app\models\Rubrics::listAllFormated(), []) ?>
+            <?= $form->field($model, 'rubrics')->dropDownList(\app\models\Rubrics::listAllFormated($listRubrics), []) ?>
         </p>
 
         <hr/>
