@@ -33,7 +33,7 @@
                     ['label' => 'Меню', 'options' => ['class' => 'header']],
                     [
                         'label' => 'Рубрики',
-                        'icon' => 'header-o',
+                        'icon' => 'circle-o',
                         'url' => '#',
                         'items' => [
                             ['label' => 'Список', 'icon' => 'list', 'url' => ['/rubrics/index'],],
