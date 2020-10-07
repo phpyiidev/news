@@ -42,6 +42,42 @@ class Rubrics extends BaseRubrics
         return ArrayHelper::map($query->all(), $keyField, $valueField);
     }
 
+    public static function getSubRubricsArray() {
+        $rubrics = static::find()->all();
+        if (empty($rubrics)) {
+            return null;
+        }
+        $subRubricsArr = [];
+        /** @var Rubrics[] $rubrics */
+        foreach ($rubrics as $rubric) {
+            $id_parent = is_null($rubric->id_parent) ? 0 : $rubric->id_parent;
+            if (empty($subRubricsArr[$id_parent])) {
+                $subRubricsArr[$id_parent] = [];
+            }
+            $subRubricsArr[$id_parent][] = $rubric;
+        }
+        return $subRubricsArr;
+    }
+
+    public static function getRubricsTree($subRubricsArr, &$out, $id_parent = 0)
+    {
+        if (empty($subRubricsArr[$id_parent])) {
+            return $out;
+        }
+        /** @var Rubrics $rubric */
+        foreach ($subRubricsArr[$id_parent] as $rubric) {
+            $items[$rubric->id] = [
+                'id' => $rubric->id,
+                'name' => $rubric->name,
+                'id_parent' => $rubric->id_parent,
+                'items' => []
+            ];
+            self::getRubricsTree($subRubricsArr, $items, $rubric->id);
+            $out[$id_parent]['items'] = $items;
+        }
+        return $out;
+    }
+
     public static function listAllFormated(&$out, $id = null, &$level = 0, $type = "list")
     {
         $rubrics = static::findAll(['id_parent' => $id]);
@@ -67,8 +103,10 @@ class Rubrics extends BaseRubrics
         $subRubrics = static::findAll(['id_parent' => $id]);
         foreach ($subRubrics as $model) {
             static::getSubRubrics($model->id, $subRubrics);
-            $out += $subRubrics;
         }
+        array_push($out,[$model->id => $model->name]);
+        //array_push($out, $result);
+        print_r($out);exit;
         return $out;
     }
 }

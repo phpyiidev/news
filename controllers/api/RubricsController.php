@@ -31,13 +31,13 @@ class RubricsController extends \yii\rest\ActiveController
 
     public function prepareDataProvider()
     {
-        $requestParams = Yii::$app->getRequest()->getBodyParams();
+        /*$requestParams = Yii::$app->getRequest()->getBodyParams();
         if (empty($requestParams)) {
             $requestParams = Yii::$app->getRequest()->getQueryParams();
         }
 
         /* @var $modelClass \yii\db\BaseActiveRecord */
-        $modelClass = $this->modelClass;
+        /*$modelClass = $this->modelClass;
 
         $query = $modelClass::find();
         if (!empty($filter)) {
@@ -66,6 +66,11 @@ class RubricsController extends \yii\rest\ActiveController
             'sort' => [
                 'params' => $requestParams,
             ],
-        ]);
+        ]);*/
+
+        $rubrics['items'] = [];
+        $subRubricsArr = Rubrics::getSubRubricsArray();
+        $firstRubric = Rubrics::find()->orderBy(['id' => 'DESC'])->one();
+        return Rubrics::getRubricsTree($subRubricsArr, $rubrics, 0);
     }
 }

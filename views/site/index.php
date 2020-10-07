@@ -2,10 +2,19 @@
 
 /* @var $this yii\web\View */
 
+use yii\jui\Menu;
+
 $this->title = 'Новостной портал';
 ?>
 <div class="site-index">
 
+    <div class="row">
+        <div class="user-menu">
+            <?php
+                
+            ?>
+        </div>
+    </div>
     <div class="jumbotron">
         <h1>Congratulations!</h1>
 
