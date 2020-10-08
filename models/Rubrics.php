@@ -69,7 +69,7 @@ class Rubrics extends BaseRubrics
             $items[$rubric->id] = [
                 'id' => $rubric->id,
                 'name' => $rubric->name,
-                'id_parent' => $rubric->id_parent,
+                'id_parent' => is_null($rubric->id_parent) ? 0 : $rubric->id_parent,
                 'items' => []
             ];
             self::getRubricsTree($subRubricsArr, $items, $rubric->id);

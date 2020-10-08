@@ -10,9 +10,9 @@ $this->title = 'Новостной портал';
 
     <div class="row">
         <div class="user-menu">
-            <?php
-                
-            ?>
+            <ul class="nav nav-tabs" id="main-menu"  rubric_id="0">
+
+            </ul>
         </div>
     </div>
     <div class="jumbotron">
@@ -60,3 +60,50 @@ $this->title = 'Новостной портал';
 
     </div>
 </div>
+<?php
+$menu = <<<JS
+    $.ajax('/api/rubrics/index',{
+        method: 'get',
+        success: function(data){
+            buildMenu(data[0]['items'], 0);
+        },
+        error: function (jqXHR, exception) {
+            if (jqXHR.status === 0) {
+                alert('Not connect. Verify Network.');
+            } else if (jqXHR.status == 404) {
+                alert('Requested page not found (404).');
+            } else if (jqXHR.status == 500) {
+                alert('Internal Server Error (500).');
+            } else if (exception === 'parsererror') {
+                alert('Requested JSON parse failed.');
+            } else if (exception === 'timeout') {
+                alert('Time out error.');
+            } else if (exception === 'abort') {
+                alert('Ajax request aborted.');
+            } else {
+                alert('Uncaught Error. ' + jqXHR.responseText);
+            }
+        }
+    });
+    function buildMenu(json, rubric_id) {
+        //console.log(json[0]);
+        $.each(json, function(index, item) {
+            console.log($('ul#main-menu[rubric_id="'+rubric_id+'"]'));
+            if (item.items.length === 0) {
+                $('ul#main-menu[rubric_id="'+rubric_id+'"]').append('<li><a href="#" rubric="'+index+'">'+item.name+'</a></li>');
+            } else {
+                $('ul#main-menu[rubric_id="'+rubric_id+'"]').append(
+                    '<li class="dropdown">'+
+                        '<a class="dropdown-toggle" data-toggle="dropdown" href="#" rubric="'+index+'">'+
+                            item.name+' <span class="caret"></span>'+
+                        '</a>'+
+                        '<ul class="dropdown-menu" id="main-menu" rubric_id="'+index+'"></ul>'+
+                    '</li>'
+                );
+                buildMenu(item.items, index);
+            }
+        });
+    }
+JS;
+$this->registerJs($menu);
+?>
