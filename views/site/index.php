@@ -16,11 +16,8 @@ $this->title = 'Новостной портал';
         </div>
     </div>
     <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+        <h1>Добро пожаловать на портал новостей!</h1>
+        <p class="lead">Здесь каждый может создавать новости и добавлять рубрики новостей, а так же просматривать уже имеющиеся новости.</p>
     </div>
 
     <div class="body-content">
@@ -62,11 +59,7 @@ $this->title = 'Новостной портал';
 </div>
 <?php
 $menu = <<<JS
-    $.ajax('/api/rubrics/index',{
-        method: 'get',
-        success: function(data){
-            buildMenu(data[0]['items'], 0);
-        },
+    $.ajaxSetup({
         error: function (jqXHR, exception) {
             if (jqXHR.status === 0) {
                 alert('Not connect. Verify Network.');
@@ -85,25 +78,42 @@ $menu = <<<JS
             }
         }
     });
-    function buildMenu(json, rubric_id) {
+    $.ajax('/api/rubrics/index',{
+        method: 'get',
+        success: function(data){
+            buildMenu(data[0]['items'], 0, 1);
+        }
+    });
+    function buildMenu(json, rubric_id, level) {
         //console.log(json[0]);
         $.each(json, function(index, item) {
             console.log($('ul#main-menu[rubric_id="'+rubric_id+'"]'));
             if (item.items.length === 0) {
-                $('ul#main-menu[rubric_id="'+rubric_id+'"]').append('<li><a href="#" rubric="'+index+'">'+item.name+'</a></li>');
+                $('ul#main-menu[rubric_id="'+rubric_id+'"]').append('<li><a id="rubric-link" href="#" rubric="'+index+'">'+item.name+'</a></li>');
             } else {
                 $('ul#main-menu[rubric_id="'+rubric_id+'"]').append(
-                    '<li class="dropdown">'+
-                        '<a class="dropdown-toggle" data-toggle="dropdown" href="#" rubric="'+index+'">'+
-                            item.name+' <span class="caret"></span>'+
+                    '<li class="dropdown-submenu">'+
+                        '<a id="rubric-link" class="dropdown-toggle" data-toggle="dropdown" href="#" rubric="'+index+'">'+
+                            item.name+
                         '</a>'+
                         '<ul class="dropdown-menu" id="main-menu" rubric_id="'+index+'"></ul>'+
                     '</li>'
                 );
-                buildMenu(item.items, index);
+                level++;
+                buildMenu(item.items, index, level);
+                level--;
             }
         });
     }
+    $(document).on("click", "a#rubric-link", function() {
+        $.ajax('/api/news/index',{
+            method: 'get',
+            data: {'rubrics': $(this).attr('rubric')},
+            success: function(data){
+                console.log(data);
+            },
+        });
+    });
 JS;
 $this->registerJs($menu);
 ?>

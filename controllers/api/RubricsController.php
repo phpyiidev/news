@@ -21,7 +21,7 @@ class RubricsController extends \yii\rest\ActiveController
         $actions = parent::actions();
 
         // отключить действия "delete" и "create"
-        //unset($actions['delete'], $actions['create']);
+        unset($actions['delete'], $actions['create'], $actions['update'], $actions['view']);
 
         // настроить подготовку провайдера данных с помощью метода "prepareDataProvider()"
         $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
@@ -31,43 +31,6 @@ class RubricsController extends \yii\rest\ActiveController
 
     public function prepareDataProvider()
     {
-        /*$requestParams = Yii::$app->getRequest()->getBodyParams();
-        if (empty($requestParams)) {
-            $requestParams = Yii::$app->getRequest()->getQueryParams();
-        }
-
-        /* @var $modelClass \yii\db\BaseActiveRecord */
-        /*$modelClass = $this->modelClass;
-
-        $query = $modelClass::find();
-        if (!empty($filter)) {
-            $query->andWhere($filter);
-        }
-        if (isset($requestParams['id_parents'])) {
-            $rubrics = [];
-            if (!is_array($requestParams['id_parents'])) {
-                $id_parents = explode(",", $requestParams['id_parents']);
-            } else {
-                $id_parents = $requestParams['id_parents'];
-            }
-            foreach ($id_parents as $id_parent) {
-                $rubrics += Rubrics::getSubRubrics($id_parent,$rubrics);
-            }
-            var_dump($rubrics);
-            $query->andFilterWhere(['in', 'id', $rubrics]);
-        }
-
-        return Yii::createObject([
-            'class' => ActiveDataProvider::className(),
-            'query' => $query,
-            'pagination' => [
-                'params' => $requestParams,
-            ],
-            'sort' => [
-                'params' => $requestParams,
-            ],
-        ]);*/
-
         $rubrics['items'] = [];
         $subRubricsArr = Rubrics::getSubRubricsArray();
         $firstRubric = Rubrics::find()->orderBy(['id' => 'DESC'])->one();

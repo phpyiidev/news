@@ -30,7 +30,7 @@ $listRubrics = [];
             <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
             <?= $form->field($model, 'text')->textarea(['rows' => 5]) ?>
             <?= $form->field($model, 'rubrics')->widget(Select2::classname(), [
-                'data' => \app\models\Rubrics::listAllFormated($listRubrics),
+                'data' => \app\models\Rubrics::listAllFormatted($listRubrics),
                 'options' => ['placeholder' => 'Выберите рубрики ...', 'multiple' => true],
                 'pluginOptions' => [
                     'tags' => true,

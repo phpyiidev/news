@@ -11,6 +11,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
+use function igorw\retry;
 
 class NewsController extends \yii\rest\ActiveController
 {
@@ -21,7 +22,7 @@ class NewsController extends \yii\rest\ActiveController
         $actions = parent::actions();
 
         // отключить действия "delete" и "create"
-        //unset($actions['delete'], $actions['create']);
+        unset($actions['delete'], $actions['create'], $actions['update'], $actions['view']);
 
         // настроить подготовку провайдера данных с помощью метода "prepareDataProvider()"
         $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
@@ -31,12 +32,11 @@ class NewsController extends \yii\rest\ActiveController
 
     public function prepareDataProvider()
     {
-        $requestParams = Yii::$app->getRequest()->getBodyParams();
+        /*$requestParams = Yii::$app->getRequest()->getBodyParams();
         if (empty($requestParams)) {
             $requestParams = Yii::$app->getRequest()->getQueryParams();
         }
 
-        /* @var $modelClass \yii\db\BaseActiveRecord */
         $modelClass = $this->modelClass;
 
         $query = $modelClass::find();
@@ -56,6 +56,16 @@ class NewsController extends \yii\rest\ActiveController
             'sort' => [
                 'params' => $requestParams,
             ],
-        ]);
+        ]);*/
+
+        /*$rubrics = Rubrics::find()->where(["in", "id", Yii::$app->request->get("rubrics")])->all();
+        $ids = [];
+        foreach ($rubrics as $rubric) {
+            array_push($rubric->id)
+        }*/
+        $id_rubrics = [];
+        return Yii::$app->request->get("rubrics");
+        $subRubricsId = Rubrics::getSubrubricsId($id_rubrics,Yii::$app->request->get("rubrics"));
+        return $subRubricsId;
     }
 }

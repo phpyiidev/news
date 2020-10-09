@@ -78,7 +78,7 @@ class Rubrics extends BaseRubrics
         return $out;
     }
 
-    public static function listAllFormated(&$out, $id = null, &$level = 0, $type = "list")
+    public static function listAllFormatted(&$out, $id = null, &$level = 0, $type = "list")
     {
         $rubrics = static::findAll(['id_parent' => $id]);
         foreach ($rubrics as $model) {
@@ -87,7 +87,7 @@ class Rubrics extends BaseRubrics
                 $prefix .= "- ";
             }
             $level++;
-            static::listAllFormated($out, $model->id, $level);
+            static::listAllFormatted($out, $model->id, $level);
             $level--;
             if ($type == "list") {
                 $out[$model->id] = $prefix.$model->name;
@@ -98,15 +98,16 @@ class Rubrics extends BaseRubrics
         return array_reverse($out,true);
     }
 
-    public static function getSubRubrics($id, &$out)
+    public static function getSubRubricsId(&$out, $ids)
     {
-        $subRubrics = static::findAll(['id_parent' => $id]);
+        return $ids;
+        $subRubrics = static::findAll(['in','id_parent', $ids]);
         foreach ($subRubrics as $model) {
-            static::getSubRubrics($model->id, $subRubrics);
+            static::getSubRubricsId($out, $model->id);
+            array_push($out,$model->id);
         }
-        array_push($out,[$model->id => $model->name]);
         //array_push($out, $result);
-        print_r($out);exit;
+        //print_r($out);exit;
         return $out;
     }
 }
