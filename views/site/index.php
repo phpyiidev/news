@@ -20,40 +20,7 @@ $this->title = 'Новостной портал';
         <p class="lead">Здесь каждый может создавать новости и добавлять рубрики новостей, а так же просматривать уже имеющиеся новости.</p>
     </div>
 
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
-        </div>
+    <div class="body-content" id="rubric_news">
 
     </div>
 </div>
@@ -82,12 +49,13 @@ $menu = <<<JS
         method: 'get',
         success: function(data){
             buildMenu(data[0]['items'], 0, 1);
+            $("a#rubric-link").first().click().click();
         }
     });
     function buildMenu(json, rubric_id, level) {
         //console.log(json[0]);
         $.each(json, function(index, item) {
-            console.log($('ul#main-menu[rubric_id="'+rubric_id+'"]'));
+            //console.log($('ul#main-menu[rubric_id="'+rubric_id+'"]'));
             if (item.items.length === 0) {
                 $('ul#main-menu[rubric_id="'+rubric_id+'"]').append('<li><a id="rubric-link" href="#" rubric="'+index+'">'+item.name+'</a></li>');
             } else {
@@ -106,12 +74,35 @@ $menu = <<<JS
         });
     }
     $(document).on("click", "a#rubric-link", function() {
+        var _this = $(this);
         $.ajax('/api/news/index',{
             method: 'get',
-            data: {'rubrics': $(this).attr('rubric')},
+            data: {'rubrics': _this.attr('rubric')},
             success: function(data){
-                console.log(data);
-            },
+                $.each($("a#rubric-link"),function(index,item) {
+                    $(item).parent().removeClass('active')
+                });
+                _this.parent().addClass('active');
+                if (data.length === 0) {
+                    $("div#rubric_news").html("<h3>В данной рубрике пока нет новостей</h3>");
+                } else {
+                    $("div#rubric_news").html("");
+                    var count = 0;
+                    $.each(data, function(index, item) {
+                        if (count === 0 || count % 3 === 0) {
+                            $("div#rubric_news").append('<div class="row" id ="row-'+Math.floor(count/3)+'"></div>');
+                        }
+                        $("div#rubric_news div#row-"+Math.floor(count/3)).append(
+                            '<div class="col-lg-4">'+
+                                '<h2>'+item.name+'</h2>'+
+                                '<p>'+item.text+'</p>'+
+                                '<p><a class="btn btn-default" href="/news/view?id='+item.id+'>Просмотр</a></p>'+
+                            '</div>'
+                        );
+                        count++;
+                    });
+                }
+            }
         });
     });
 JS;

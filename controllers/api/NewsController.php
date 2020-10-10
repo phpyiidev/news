@@ -6,6 +6,7 @@ namespace app\controllers\api;
 * This is the class for REST controller "NewsController".
 */
 
+use app\models\News;
 use app\models\Rubrics;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -32,40 +33,9 @@ class NewsController extends \yii\rest\ActiveController
 
     public function prepareDataProvider()
     {
-        /*$requestParams = Yii::$app->getRequest()->getBodyParams();
-        if (empty($requestParams)) {
-            $requestParams = Yii::$app->getRequest()->getQueryParams();
-        }
-
-        $modelClass = $this->modelClass;
-
-        $query = $modelClass::find();
-        $query->joinWith(['rubrics']);
-        if (!empty($filter)) {
-            $query->andWhere($filter);
-        }
-        $rubrics = Rubrics::findAll(['in']);
-        $query->andFilterWhere(['in', 'news_rubrics.id_rubric', $requestParams['rubrics']]);
-
-        return Yii::createObject([
-            'class' => ActiveDataProvider::className(),
-            'query' => $query,
-            'pagination' => [
-                'params' => $requestParams,
-            ],
-            'sort' => [
-                'params' => $requestParams,
-            ],
-        ]);*/
-
-        /*$rubrics = Rubrics::find()->where(["in", "id", Yii::$app->request->get("rubrics")])->all();
-        $ids = [];
-        foreach ($rubrics as $rubric) {
-            array_push($rubric->id)
-        }*/
         $id_rubrics = [];
-        return Yii::$app->request->get("rubrics");
         $subRubricsId = Rubrics::getSubrubricsId($id_rubrics,Yii::$app->request->get("rubrics"));
-        return $subRubricsId;
+        $news = News::find()->joinWith(['rubrics'])->where(['in', 'news_rubrics.id_rubric', $subRubricsId])->all();
+        return $news;
     }
 }

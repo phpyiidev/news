@@ -87,7 +87,7 @@ class RubricsController extends BaseController
                 if($relAttributes){
                     return $this->goBack();
                 }      
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['index']);
             } elseif (!\Yii::$app->request->isPost) {
                 $model->load($_GET);
             }

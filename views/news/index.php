@@ -5,7 +5,7 @@ use kartik\widgets\Select2;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /**
  * @var yii\web\View $this
@@ -82,11 +82,20 @@ $this->params['breadcrumbs'][] = $this->title;
                         $params[0] = \Yii::$app->controller->id ? \Yii::$app->controller->id . '/' . $action : $action;
                         return Url::toRoute($params);
                     },
-                    'contentOptions' => ['nowrap' => 'nowrap']
+                    'contentOptions' => ['width' => '4%', 'nowrap' => 'nowrap'],
                 ],
-                ['class' => 'yii\grid\SerialColumn'],
-                'name',
-                'text',
+                [
+                    'class' => 'yii\grid\SerialColumn',
+                    'contentOptions' => ['width' => '2%', 'nowrap' => 'nowrap'],
+                ],
+                [
+                    'attribute' => 'name',
+                    'width' => '20%',
+                ],
+                [
+                    'attribute' => 'text',
+                    'width' => '60%',
+                ],
                 [
                     'attribute' => 'rubrics',
                     'format' => 'row',

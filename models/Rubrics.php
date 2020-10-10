@@ -100,11 +100,14 @@ class Rubrics extends BaseRubrics
 
     public static function getSubRubricsId(&$out, $ids)
     {
-        return $ids;
-        $subRubrics = static::findAll(['in','id_parent', $ids]);
+        $subRubrics = static::find()->where(['in','id_parent', $ids])->all();
+        //return $subRubrics;
+        array_push($out,(int)$ids);
         foreach ($subRubrics as $model) {
             static::getSubRubricsId($out, $model->id);
-            array_push($out,$model->id);
+            if (!in_array($model->id,$out)) {
+                array_push($out,$model->id);
+            }
         }
         //array_push($out, $result);
         //print_r($out);exit;
