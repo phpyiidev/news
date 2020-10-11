@@ -14,7 +14,7 @@ class m201010_155609_add_data_dump extends Migration
     public function safeUp()
     {
         $this->execute(
-            file_get_contents(__DIR__ . '\data\news.sql')
+            file_get_contents(__DIR__ . '/data/news.sql')
         );
 
         return true;
