@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 
 /**
+ * Представление создания новости
  * @var yii\web\View $this
  * @var app\models\News $model
  * @var string $relAttributes relation fields names for disabling

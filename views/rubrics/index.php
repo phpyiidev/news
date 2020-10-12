@@ -5,6 +5,7 @@ use yii\helpers\Url;
 use yii\grid\GridView;
 
 /**
+ * Вывод списка всех рубрик в таблице с пагинацией, возможностью фильтрации и сортировки
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
  * @var app\models\search\RubricsSearch $searchModel

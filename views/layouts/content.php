@@ -2,6 +2,7 @@
 use yii\widgets\Breadcrumbs;
 use dmstr\widgets\Alert;
 
+// Макет для контента. Область основного контента на странице
 ?>
 <div class="content-wrapper">
     <section class="content-header">

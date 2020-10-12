@@ -5,6 +5,9 @@ namespace app\controllers;
 use Yii;
 use app\components\BaseController;
 
+/**
+ * Контроллер информационных страниц сайта.
+ */
 class SiteController extends BaseController
 {
     /**
@@ -20,8 +23,7 @@ class SiteController extends BaseController
     }
 
     /**
-     * Displays homepage.
-     *
+     * Вывод главной страницы сайта.
      * @return string
      */
     public function actionIndex()

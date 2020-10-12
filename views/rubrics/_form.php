@@ -6,6 +6,7 @@ use \dmstr\bootstrap\Tabs;
 use yii\helpers\StringHelper;
 
 /**
+ * Форма для создания/редактирования рубрик
  * @var yii\web\View $this
  * @var app\models\Rubrics $model
  * @var yii\widgets\ActiveForm $form

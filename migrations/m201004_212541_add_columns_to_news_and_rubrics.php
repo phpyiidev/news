@@ -4,6 +4,9 @@ use yii\db\Migration;
 
 /**
  * Class m201004_212541_add_columns_to_news_and_rubrics
+ * Миграция для добавление полей с информацией о создании/изменении записей. Данные поля используются поведениями,
+ * которые автоматически сохраняют информацию о времени создания/изменения записи, а так же о пользователе
+ * создавшим/изменившим запись
  */
 class m201004_212541_add_columns_to_news_and_rubrics extends Migration
 {
@@ -42,19 +45,4 @@ class m201004_212541_add_columns_to_news_and_rubrics extends Migration
 
         return true;
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m201004_212541_add_columns_to_news_and_rubrics cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

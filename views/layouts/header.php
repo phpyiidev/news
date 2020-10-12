@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Html;
 
+// Шапка сайта
 /* @var $this \yii\web\View */
 /* @var $content string */
 ?>

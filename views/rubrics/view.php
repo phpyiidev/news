@@ -5,6 +5,7 @@ use kartik\detail\DetailView;
 
 
 /**
+ * Представление просмотра рубрики
  * @var yii\web\View $this
  * @var app\models\Rubrics $model
  */

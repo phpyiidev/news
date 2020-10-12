@@ -6,6 +6,7 @@ use kartik\form\ActiveForm;
 use yii\helpers\StringHelper;
 
 /**
+ * Форма для создания/редактирования новостей
  * @var yii\web\View $this
  * @var app\models\News $model
  * @var yii\widgets\ActiveForm $form

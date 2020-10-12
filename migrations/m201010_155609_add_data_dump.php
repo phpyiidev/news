@@ -4,6 +4,7 @@ use yii\db\Migration;
 
 /**
  * Class m201010_155609_add_data_dump
+ * Миграция для загрузки начальных данных в БД из файла.
  */
 class m201010_155609_add_data_dump extends Migration
 {
@@ -25,25 +26,11 @@ class m201010_155609_add_data_dump extends Migration
      */
     public function safeDown()
     {
+        // Удаление всех записей в таблицах
         $this->delete('news_rubrics');
         $this->delete('news');
         $this->delete('rubrics');
 
         return true;
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m201010_155609_add_data_dump cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

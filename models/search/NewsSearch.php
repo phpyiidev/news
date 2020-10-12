@@ -6,12 +6,9 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\News;
-use yii\db\ActiveRecord;
-use yii\db\mysql\Schema;
-use yii\db\Query;
 
 /**
- * NewsSearch represents the model behind the search form about `app\models\News`.
+ * NewsSearch модель наследующая `app\models\News`, используется для формирования ActiveDataProvider.
  */
 class NewsSearch extends News
 {
@@ -33,15 +30,12 @@ class NewsSearch extends News
      */
     public function scenarios()
     {
-        // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
     /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
+     * Создаёт провайдер данных по заданному запросу
+     * @param array $params Параметры запроса
      * @return ActiveDataProvider
      */
     public function search($params)
@@ -63,7 +57,6 @@ class NewsSearch extends News
 
         $query->andFilterWhere([
             'id' => $this->id,
-            //'news_rubrics.id_rubric' => $this->rubrics,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'created_at' => $this->created_at,

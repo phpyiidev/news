@@ -3,11 +3,12 @@
 use yii\helpers\Html;
 
 /**
-* @var yii\web\View $this
-* @var app\models\News $model
-* @var string $relAttributes relation fields names for disabling
-*/
-if(!isset($relAttributes)){
+ * Представление редактирования новости
+ * @var yii\web\View $this
+ * @var app\models\News $model
+ * @var string $relAttributes relation fields names for disabling
+ */
+if (!isset($relAttributes)) {
     $relAttributes = false;
 }
 
@@ -22,7 +23,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
         <?= Html::a('<span class="glyphicon glyphicon-eye-open"></span> ' . 'Просмотр', ['view', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
     </div>
 
-    <hr />
+    <hr/>
 
     <?php echo $this->render('_form', [
         'model' => $model,

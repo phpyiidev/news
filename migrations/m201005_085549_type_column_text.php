@@ -4,6 +4,7 @@ use yii\db\Migration;
 
 /**
  * Class m201005_085549_type_column_text
+ * Исправление ошибочного типа данных для поля содержащего текст новости.
  */
 class m201005_085549_type_column_text extends Migration
 {
@@ -13,6 +14,7 @@ class m201005_085549_type_column_text extends Migration
     public function safeUp()
     {
         $this->alterColumn('{{%news}}','text', $this->text()->null()->comment("Текст"));
+        return true;
     }
 
     /**
@@ -20,23 +22,7 @@ class m201005_085549_type_column_text extends Migration
      */
     public function safeDown()
     {
-        echo "m201005_085549_type_column_text cannot be reverted.\n";
-
-        return false;
+        $this->alterColumn('{{%news}}','text', $this->integer()->null()->comment("Текст"));
+        return true;
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m201005_085549_type_column_text cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

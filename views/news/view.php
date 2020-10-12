@@ -5,6 +5,7 @@ use yii\helpers\ArrayHelper;
 use kartik\detail\DetailView;
 
 /**
+ * Представление просмотра новости
  * @var yii\web\View $this
  * @var app\models\News $model
  */
