@@ -9,38 +9,37 @@ use app\models\search\RubricsSearch;
 use app\components\BaseController;
 use yii\web\HttpException;
 use yii\helpers\Url;
-use yii\filters\AccessControl;
 use kartik\grid\EditableColumnAction;
-use yii\data\ActiveDataProvider;
 
 /**
-* RubricsController implements the CRUD actions for Rubrics model.
-*/
+ * RubricsController содержит набор действий CRUD для модели Rubrics.
+ */
 class RubricsController extends BaseController
 {
     /**
-    * @var boolean whether to enable CSRF validation for the actions in this controller.
-    * CSRF validation is enabled only when both this property and [[Request::enableCsrfValidation]] are true.
-    */
+     * @var boolean whether to enable CSRF validation for the actions in this controller.
+     * CSRF validation is enabled only when both this property and [[Request::enableCsrfValidation]] are true.
+     */
     public $enableCsrfValidation = false;
 
 
-    public function actions() {
+    public function actions()
+    {
         return [
             'editable-column-update' => [
                 'class' => EditableColumnAction::className(), // action class name
                 'modelClass' => Rubrics::className(),
             ],
         ];
-    }    
-    
+    }
+
     /**
-    * Lists all Rubrics models.
-    * @return mixed
-    */
+     * Вывод списка всех рубрик.
+     * @return mixed
+     */
     public function actionIndex()
     {
-        $searchModel  = new RubricsSearch;
+        $searchModel = new RubricsSearch;
         $dataProvider = $searchModel->search($_GET);
 
         Url::remember();
@@ -53,9 +52,8 @@ class RubricsController extends BaseController
     }
 
     /**
-     * Displays a single Rubrics model.
-     * @param integer $id
-     *
+     * Просмотр данных одной рубрики.
+     * @param integer $id Идентификатор просматриваемой рубрики
      * @return mixed
      */
     public function actionView($id)
@@ -69,10 +67,10 @@ class RubricsController extends BaseController
     }
 
     /**
-     * Creates a new Rubrics model.
-     * If creation is successful, the browser will be redirected 
-     *  to the 'view' page or back, if parameter $goBack is true.
-     * @param integer $id_parent
+     * Создание рубрики.
+     * После успешного создания рубрики происходит переадресация на страницу просмотра
+     * данных о рубрики, либо на предыдущую страницу.
+     * @param integer|null $id_parent Идентификатор родительской рубрики. Null для корневых рубрик
      * @return mixed
      */
     public function actionCreate($id_parent = null)
@@ -81,52 +79,39 @@ class RubricsController extends BaseController
         $model->load($_GET);
         $model->id_parent = $id_parent;
         $relAttributes = $model->attributes;
-        
+
         try {
             if ($model->load($_POST) && $model->save()) {
-                if($relAttributes){
+                if ($relAttributes) {
                     return $this->goBack();
-                }      
+                }
                 return $this->redirect(['index']);
             } elseif (!\Yii::$app->request->isPost) {
                 $model->load($_GET);
             }
         } catch (\Exception $e) {
-            $msg = (isset($e->errorInfo[2]))?$e->errorInfo[2]:$e->getMessage();
+            $msg = (isset($e->errorInfo[2])) ? $e->errorInfo[2] : $e->getMessage();
             $model->addError('_exception', $msg);
         }
-        
+
         return $this->render('create', [
             'model' => $model,
             'relAttributes' => $relAttributes,
-            ]);
+        ]);
     }
-    
+
     /**
-     * Add a new TestContacts record for relation grid and redirect back.
+     * Изменение информации о рубрики.
+     * После успешного изменения рубрики происходит переадресация на страницу просмотра.
+     * @param integer $id Идентификатор изменяемой рубрики
      * @return mixed
      */
-    public function actionCreateForRel()
-    {
-        $model = new Rubrics;
-        $model->load($_GET);
-        $relAttributes = $model->attributes;
-        $model->save();
-        return $this->goBack();
-    }
-    
-    /**
-    * Updates an existing Rubrics model.
-    * If update is successful, the browser will be redirected to the 'view' page.
-    * @param integer $id
-    * @return mixed
-    */
     public function actionUpdate($id)
     {
         $model = new Rubrics;
         $model->load($_GET);
         $relAttributes = $model->attributes;
-        
+
         $model = $this->findModel($id);
 
         if ($model->load($_POST) && $model->save()) {
@@ -134,36 +119,35 @@ class RubricsController extends BaseController
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'relAttributes' => $relAttributes                
+                'relAttributes' => $relAttributes
             ]);
         }
     }
 
     /**
-    * Deletes an existing Rubrics model.
-    * If deletion is successful, the browser will be redirected to the 'index' page.
-    * @param integer $id
-    * @return mixed
-    */
+     * Удаление рубрики.
+     * @param integer $id Идентификатор удаляемой рубрики
+     * @return mixed
+     */
     public function actionDelete($id)
     {
         try {
             $this->findModel($id)->delete();
         } catch (\Exception $e) {
-            $msg = (isset($e->errorInfo[2]))?$e->errorInfo[2]:$e->getMessage();
+            $msg = (isset($e->errorInfo[2])) ? $e->errorInfo[2] : $e->getMessage();
             \Yii::$app->getSession()->addFlash('error', $msg);
             return $this->redirect(Url::previous());
         }
 
         $model = new Rubrics;
         $model->load($_GET);
-        $relAttributes = $model->attributes;       
-        if($relAttributes){
+        $relAttributes = $model->attributes;
+        if ($relAttributes) {
             return $this->redirect(Url::previous());
-        }        
-        
+        }
+
         // TODO: improve detection
-        $isPivot = strstr('$id',',');
+        $isPivot = strstr('$id', ',');
         if ($isPivot == true) {
             return $this->redirect(Url::previous());
         } elseif (isset(\Yii::$app->session['__crudReturnUrl']) && \Yii::$app->session['__crudReturnUrl'] != '/') {
@@ -178,73 +162,18 @@ class RubricsController extends BaseController
     }
 
     /**
-    * Update Rubrics model record by editable.
-    * @param integer $id
-    * @return mixed
-    */    
-    public function actionEditable($id){
-        
-        // Check if there is an Editable ajax request
-        if (!isset($_POST['hasEditable'])) {
-            return false;
-        }
-        
-        $post = [];
-        foreach($_POST as $name => $value){
-            //if(in_array($name,$this->editAbleFileds)){
-                $post[$name] = $value;
-            //}
-        }
-        
-        // use Yii's response format to encode output as JSON
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;        
-        if(!$post){
-            return ['output'=>'', 'message'=> 'Can not update this field'];
-        }
-
-        $model = $this->findModel($id);
-        $model->setAttributes($post, true);
-        // read your posted model attributes
-        if ($model->save()) {
-            // read or convert your posted information
-            $value = $model->$name;
-
-            // return JSON encoded output in the below format
-            return ['output'=>$value, 'message'=>''];
-
-            // alternatively you can return a validation error
-            // return ['output'=>'', 'message'=>'Validation error'];
-        }
-        // else if nothing to do always return an empty JSON encoded output
-        else {
-            //  return ['output'=>'', 'message'=>''];
-            $errors = [];
-            foreach($model->errors as $field => $messages){
-                foreach($messages as $message){
-                    $errors[] = $model->getAttributeLabel($field) 
-                            . ': '
-                            . $message;
-                }
-            }
-            return ['output'=>'', 'message'=>implode('<br>',$errors)];
-            
-        }
-        
-    }    
-
-    /**
-    * Finds the Rubrics model based on its primary key value.
-    * If the model is not found, a 404 HTTP exception will be thrown.
-    * @param integer $id
-    * @return Rubrics the loaded model
-    * @throws HttpException if the model cannot be found
-    */
+     * Функция поиска рубрики по идентификатору
+     * Если рубрики не существует, то вернёт 404 ошибку.
+     * @param integer $id Идентификатор искомой рубрики
+     * @return Rubrics модель рубрики
+     * @throws HttpException если не найдена рубрикиа
+     */
     protected function findModel($id)
     {
         if (($model = Rubrics::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new HttpException(404, 'The requested page does not exist.');
+            throw new HttpException(404, 'Указанная рубрика не существует.');
         }
     }
 }

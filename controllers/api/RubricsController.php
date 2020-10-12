@@ -3,14 +3,11 @@
 namespace app\controllers\api;
 
 /**
-* This is the class for REST controller "RubricsController".
-*/
+ * REST контроллер рубрик. По запросу возвращает все рубрики и их подрубрики в виде дерева в json формате. Единственное
+ * действие "index" без параметров - возвращает все рубрики и подрубрики в виде дерева.
+ */
 
 use app\models\Rubrics;
-use Yii;
-use yii\data\ActiveDataProvider;
-use yii\filters\AccessControl;
-use yii\helpers\ArrayHelper;
 
 class RubricsController extends \yii\rest\ActiveController
 {
@@ -20,10 +17,10 @@ class RubricsController extends \yii\rest\ActiveController
     {
         $actions = parent::actions();
 
-        // отключить действия "delete" и "create"
+        // отключить действия все действия, кроме "index"
         unset($actions['delete'], $actions['create'], $actions['update'], $actions['view']);
 
-        // настроить подготовку провайдера данных с помощью метода "prepareDataProvider()"
+        // замена провайдера данных для действия "index" с помощью метода "prepareDataProvider()"
         $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
 
         return $actions;
@@ -31,9 +28,10 @@ class RubricsController extends \yii\rest\ActiveController
 
     public function prepareDataProvider()
     {
+        // Можно реализовать через dataProvider, для использования сортировки, фильтров и пагинации. Т.к. в задании
+        // не указан данный функционал, был выбран простоя метод возврата данных.
         $rubrics['items'] = [];
         $subRubricsArr = Rubrics::getSubRubricsArray();
-        $firstRubric = Rubrics::find()->orderBy(['id' => 'DESC'])->one();
         return Rubrics::getRubricsTree($subRubricsArr, $rubrics, 0);
     }
 }

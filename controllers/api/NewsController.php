@@ -1,18 +1,15 @@
 <?php
 
 namespace app\controllers\api;
-
 /**
-* This is the class for REST controller "NewsController".
-*/
+ * REST контроллер новостей. По запросу возвращает список новостей в json формате. Единственное действие "index"
+ * принимает GET параметр "rubrics" - массив идентификаторов рубрик, по которому возвращает список новостей для всех
+ * указанных рубрик и их подрубрик по все уровням.
+ */
 
 use app\models\News;
 use app\models\Rubrics;
 use Yii;
-use yii\data\ActiveDataProvider;
-use yii\filters\AccessControl;
-use yii\helpers\ArrayHelper;
-use function igorw\retry;
 
 class NewsController extends \yii\rest\ActiveController
 {
@@ -22,10 +19,10 @@ class NewsController extends \yii\rest\ActiveController
     {
         $actions = parent::actions();
 
-        // отключить действия "delete" и "create"
+        // отключить действия все действия, кроме "index"
         unset($actions['delete'], $actions['create'], $actions['update'], $actions['view']);
 
-        // настроить подготовку провайдера данных с помощью метода "prepareDataProvider()"
+        // замена провайдера данных для действия "index" с помощью метода "prepareDataProvider()"
         $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
 
         return $actions;
@@ -33,8 +30,10 @@ class NewsController extends \yii\rest\ActiveController
 
     public function prepareDataProvider()
     {
+        // Можно реализовать через dataProvider, для использования сортировки, фильтров и пагинации. Т.к. в задании
+        // не указан данный функционал, был выбран простоя метод возврата данных.
         $id_rubrics = [];
-        $subRubricsId = Rubrics::getSubrubricsId($id_rubrics,Yii::$app->request->get("rubrics"));
+        $subRubricsId = Rubrics::getSubrubricsId($id_rubrics, Yii::$app->request->get("rubrics"));
         $news = News::find()->joinWith(['rubrics'])->where(['in', 'news_rubrics.id_rubric', $subRubricsId])->all();
         return $news;
     }
